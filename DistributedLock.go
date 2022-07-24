@@ -1,7 +1,6 @@
 package distributedlock
 
 import (
-	"sync"
 	"time"
 )
 
@@ -10,9 +9,7 @@ type IDistributedLock interface {
 	GetLock(key string, timeout time.Duration) (Lock, error)
 }
 
-
 type Lock interface {
 	Lock()
 	Release()
 }
-
