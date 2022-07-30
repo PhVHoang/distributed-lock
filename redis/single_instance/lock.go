@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/go-redis/redis"
@@ -24,12 +23,8 @@ const (
 	`
 )
 
-func AcquireLock(key, value string, timeoutMs int) (bool, error) {
+func AcquireLock(key, value string, timeoutMs int, rdb redis.Client) (bool, error) {
 	ctx := context.Background()
-
-	rdb := redis.NewClient(&redis.Options{
-		Addr: ":6379",
-	})
 
 	_ = rdb.FlushDB(ctx).Err()
 
@@ -58,10 +53,6 @@ func main() {
 		DB:       0,
 	})
 
-	//err = client.Set("name", "Hoang Pham", 0).Err()
-	val, err := client.Get("name").Result()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(val)
+	AcquireLock("your_name", "name", 10000, client)
+
 }
